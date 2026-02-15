@@ -88,14 +88,39 @@ The dashboard opens at **http://localhost:8501**.
 
 ## Architecture
 
+<a href="https://excalidraw.com/#json=">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Open%20in-Excalidraw-6965db?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMS4yNyA1LjA0bC0yLjMxLTIuMzFhMS41IDEuNSAwIDAwLTIuMTIgMEwzIDE2LjU2VjIxaDQuNDRMMjEuMjcgNy4xNmExLjUgMS41IDAgMDAwLTIuMTJ6TTcuMDEgMTkuMDFIMHYtNy4wMUwxMy41OSA1LjQxbDcgN0w3LjAxIDE5LjAxeiIvPjwvc3ZnPg==&logoColor=white">
+    <img alt="Open in Excalidraw" src="https://img.shields.io/badge/Open%20in-Excalidraw-6965db?style=for-the-badge">
+  </picture>
+</a>
+
+> Open [`architecture.excalidraw`](./architecture.excalidraw) in [excalidraw.com](https://excalidraw.com) to view and edit the diagram interactively.
+
 ```
-Streamlit Dashboard (app.py)
-        │
-        ▼
-  Graphiti Client (config.py)
-        │
-        ▼
-  Neo4j Knowledge Graph (docker-compose.yml)
+┌──────────────────────────────────┐    ┌───────────────────┐
+│      Streamlit Dashboard         │    │   Incident Data   │
+│           (app.py)               │    │(incident_data.py) │
+│ ┌────────┐┌─────────────┐       │    └─────────┬─────────┘
+│ │Timeline││Investigation│       │              │
+│ └────────┘└─────────────┘       │              ▼
+│ ┌────────┐┌──────┐              │    ┌─────────────────────┐
+│ │Entities││Report│              │    │  Ingest Pipeline    │
+│ └────────┘└──────┘              │    │    (ingest.py)      │
+└────────────────┬─────────────────┘    └──────────┬──────────┘
+                 │                                 │
+                 └────────────┬────────────────────┘
+                              ▼
+               ┌───────────────────────────┐
+               │      Graphiti Client      │
+               │       (config.py)         │
+               └──┬──────┬──────┬──────┬───┘
+                  │      │      │      │
+                  ▼      ▼      ▼      ▼
+           ┌───────┐┌────────┐┌───────┐┌─────────┐
+           │Claude ││Embedder││Rerank ││  Neo4j  │
+           │  API  ││MiniLM  ││ BGE   ││ Docker  │
+           └───────┘└────────┘└───────┘└─────────┘
 ```
 
 | File | Description |
