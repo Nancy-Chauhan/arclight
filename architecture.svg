@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 640" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <style>
+    .box { rx: 12; ry: 12; stroke-width: 2; }
+    .tab { rx: 8; ry: 8; stroke-width: 1.5; }
+    .title { font-weight: 700; font-size: 18px; fill: #1e1e1e; }
+    .subtitle { font-weight: 500; font-size: 13px; fill: #555; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace; }
+    .tab-text { font-weight: 600; font-size: 13px; fill: #1e1e1e; }
+    .box-title { font-weight: 700; font-size: 17px; fill: #1e1e1e; }
+    .box-sub { font-weight: 500; font-size: 12px; fill: #555; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace; }
+    .small-title { font-weight: 700; font-size: 15px; fill: #1e1e1e; }
+    .small-sub { font-weight: 500; font-size: 11.5px; fill: #444; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace; }
+    .arrow { fill: none; stroke: #555; stroke-width: 2; marker-end: url(#arrowhead); }
+    .arrow-color { fill: none; stroke-width: 2; marker-end: url(#arrowhead-color); }
+    .label { font-size: 11px; fill: #777; font-weight: 600; font-style: italic; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <marker id="ah-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e03131"/>
+    </marker>
+    <marker id="ah-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2f9e44"/>
+    </marker>
+    <marker id="ah-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e67700"/>
+    </marker>
+    <marker id="ah-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1971c2"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="640" fill="white"/>
+
+  <!-- ==================== ROW 1: Dashboard + Data/Ingest ==================== -->
+
+  <!-- Dashboard Frame -->
+  <rect class="box" x="70" y="25" width="660" height="175" fill="#dbe4ff" stroke="#4263eb"/>
+  <text class="title" x="400" y="62" text-anchor="middle">Streamlit Dashboard</text>
+  <text class="subtitle" x="400" y="82" text-anchor="middle">app.py</text>
+
+  <!-- Tabs -->
+  <rect class="tab" x="105" y="100" width="130" height="46" fill="#bac8ff" stroke="#4263eb"/>
+  <text class="tab-text" x="170" y="128" text-anchor="middle">Timeline</text>
+
+  <rect class="tab" x="250" y="100" width="150" height="46" fill="#bac8ff" stroke="#4263eb"/>
+  <text class="tab-text" x="325" y="128" text-anchor="middle">Investigation</text>
+
+  <rect class="tab" x="415" y="100" width="130" height="46" fill="#bac8ff" stroke="#4263eb"/>
+  <text class="tab-text" x="480" y="128" text-anchor="middle">Entities</text>
+
+  <rect class="tab" x="560" y="100" width="130" height="46" fill="#bac8ff" stroke="#4263eb"/>
+  <text class="tab-text" x="625" y="128" text-anchor="middle">Report</text>
+
+  <!-- Incident Data -->
+  <rect class="box" x="830" y="25" width="230" height="75" fill="#fff3bf" stroke="#e67700"/>
+  <text class="small-title" x="945" y="55" text-anchor="middle">Incident Data</text>
+  <text class="small-sub" x="945" y="75" text-anchor="middle">incident_data.py</text>
+
+  <!-- Ingest Pipeline -->
+  <rect class="box" x="830" y="135" width="230" height="75" fill="#e9ecef" stroke="#495057"/>
+  <text class="small-title" x="945" y="165" text-anchor="middle">Ingest Pipeline</text>
+  <text class="small-sub" x="945" y="185" text-anchor="middle">ingest.py</text>
+
+  <!-- Arrow: Data → Ingest -->
+  <line class="arrow" x1="945" y1="100" x2="945" y2="133"/>
+
+  <!-- ==================== ROW 2: Graphiti Client ==================== -->
+
+  <rect class="box" x="140" y="280" width="530" height="85" fill="#d0bfff" stroke="#7048e8"/>
+  <text class="box-title" x="405" y="315" text-anchor="middle">Graphiti Client</text>
+  <text class="box-sub" x="405" y="338" text-anchor="middle">config.py</text>
+
+  <!-- Arrow: Dashboard → Graphiti -->
+  <line class="arrow" x1="400" y1="200" x2="400" y2="278"/>
+  <text class="label" x="415" y="244">search / query</text>
+
+  <!-- Arrow: Ingest → Graphiti (curved) -->
+  <path class="arrow" d="M 830,172 C 770,172 720,280 670,310" />
+  <text class="label" x="730" y="250">add_episode</text>
+
+  <!-- ==================== ROW 3: Backend Services ==================== -->
+
+  <!-- Claude API -->
+  <rect class="box" x="20" y="470" width="200" height="100" fill="#ffc9c9" stroke="#e03131"/>
+  <text class="small-title" x="120" y="510" text-anchor="middle">Anthropic</text>
+  <text class="small-sub" x="120" y="530" text-anchor="middle">Claude API</text>
+  <text class="label" x="120" y="552" text-anchor="middle" style="fill:#e03131; font-style:normal;">LLM</text>
+
+  <!-- Local Embedder -->
+  <rect class="box" x="250" y="470" width="200" height="100" fill="#b2f2bb" stroke="#2f9e44"/>
+  <text class="small-title" x="350" y="510" text-anchor="middle">Local Embedder</text>
+  <text class="small-sub" x="350" y="530" text-anchor="middle">MiniLM-L6-v2</text>
+  <text class="label" x="350" y="552" text-anchor="middle" style="fill:#2f9e44; font-style:normal;">Embeddings</text>
+
+  <!-- BGE Reranker -->
+  <rect class="box" x="480" y="470" width="200" height="100" fill="#ffec99" stroke="#e67700"/>
+  <text class="small-title" x="580" y="510" text-anchor="middle">BGE Reranker</text>
+  <text class="small-sub" x="580" y="530" text-anchor="middle">Cross Encoder</text>
+  <text class="label" x="580" y="552" text-anchor="middle" style="fill:#e67700; font-style:normal;">Re-ranking</text>
+
+  <!-- Neo4j -->
+  <rect class="box" x="710" y="470" width="200" height="100" fill="#a5d8ff" stroke="#1971c2"/>
+  <text class="small-title" x="810" y="510" text-anchor="middle">Neo4j</text>
+  <text class="small-sub" x="810" y="530" text-anchor="middle">Knowledge Graph</text>
+  <text class="label" x="810" y="552" text-anchor="middle" style="fill:#1971c2; font-style:normal;">Docker</text>
+
+  <!-- Arrows: Graphiti → backends -->
+  <line x1="240" y1="365" x2="120" y2="468" fill="none" stroke="#e03131" stroke-width="2" marker-end="url(#ah-red)"/>
+  <line x1="350" y1="365" x2="350" y2="468" fill="none" stroke="#2f9e44" stroke-width="2" marker-end="url(#ah-green)"/>
+  <line x1="480" y1="365" x2="580" y2="468" fill="none" stroke="#e67700" stroke-width="2" marker-end="url(#ah-orange)"/>
+  <line x1="580" y1="365" x2="810" y2="468" fill="none" stroke="#1971c2" stroke-width="2" marker-end="url(#ah-blue)"/>
+</svg>

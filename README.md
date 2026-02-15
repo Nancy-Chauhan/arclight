@@ -35,7 +35,9 @@ The dashboard opens at **http://localhost:8501**.
 
 ## Architecture
 
-> Open [`architecture.excalidraw`](./architecture.excalidraw) in [excalidraw.com](https://excalidraw.com) to view and edit the architecture diagram.
+<p align="center">
+  <img src="./architecture.svg" alt="Architecture Diagram" width="100%">
+</p>
 
 | File | Description |
 |---|---|
