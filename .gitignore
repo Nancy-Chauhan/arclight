@@ -5,3 +5,4 @@ __pycache__/
 .env.*
 !.env.example
 neo4j_data/
+.DS_Store
