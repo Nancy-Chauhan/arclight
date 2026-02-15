@@ -1,12 +1,66 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit">
+  <img src="https://img.shields.io/badge/Neo4j-4581C3?style=for-the-badge&logo=neo4j&logoColor=white" alt="Neo4j">
+  <img src="https://img.shields.io/badge/Anthropic-191919?style=for-the-badge&logo=anthropic&logoColor=white" alt="Anthropic">
+</p>
+
 # Arclight
 
-An enterprise-grade incident investigation tool powered by [Graphiti](https://github.com/getzep/graphiti)'s temporal knowledge graph. Simulates a production incident, ingests timestamped events, and provides a Streamlit web dashboard for investigation.
+An incident investigation platform powered by [Graphiti](https://github.com/getzep/graphiti)'s temporal knowledge graph. Ingests timestamped incident events into Neo4j and provides a Streamlit dashboard for interactive investigation using natural language queries.
 
-## Prerequisites
+## Incident Knowledge Graph
 
-- Docker & Docker Compose
-- Python 3.11+
-- An OpenAI API key
+```mermaid
+graph TD
+    subgraph CAUSE["ROOT CAUSE"]
+        Alice["Alice<br/><i>Engineer</i>"]
+        PR482["PR #482<br/><code>1000 → 100 req/s</code>"]
+        RL["Rate Limiter<br/><i>payment-api</i>"]
+    end
+
+    subgraph DETECTION["DETECTION"]
+        Datadog["Datadog<br/><i>Monitoring</i>"]
+        PD["PagerDuty<br/><i>Alerting</i>"]
+    end
+
+    subgraph SERVICE["IMPACTED SERVICE"]
+        PA["payment-api"]
+    end
+
+    subgraph RESPONSE["RESPONSE"]
+        Bob["Bob<br/><i>On-call IC</i>"]
+    end
+
+    subgraph RESOLUTION["RESOLUTION"]
+        PR483["PR #483 (hotfix)<br/><code>100 → 1000 req/s</code>"]
+        CI["CI Pipeline"]
+    end
+
+    Alice -->|authored| PR482
+    Alice -->|pushed hotfix| PR483
+    PR482 -->|misconfigured| RL
+    RL -->|"caused 42% HTTP 429 errors"| PA
+    PR482 -->|triggered build| CI
+    CI -->|deployed v2.3.1| PA
+    Datadog -->|detected error spike| PA
+    Datadog -->|triggered P1 alert| PD
+    PD -->|paged on-call| Bob
+    Bob -->|diagnosed root cause| RL
+    PR483 -->|"deployed v2.3.2 (fix)"| PA
+
+    style PA fill:#a5d8ff,stroke:#1971c2,stroke-width:3px,color:#000
+    style PR482 fill:#ffc9c9,stroke:#e03131,stroke-width:2px,color:#000
+    style PR483 fill:#b2f2bb,stroke:#2f9e44,stroke-width:2px,color:#000
+    style RL fill:#ffec99,stroke:#e67700,stroke-width:2px,color:#000
+    style Alice fill:#d0bfff,stroke:#7048e8,stroke-width:2px,color:#000
+    style Bob fill:#a5d8ff,stroke:#1971c2,stroke-width:2px,color:#000
+    style Datadog fill:#96f2d7,stroke:#0ca678,stroke-width:2px,color:#000
+    style PD fill:#ffc9c9,stroke:#e03131,stroke-width:2px,color:#000
+    style CI fill:#bac8ff,stroke:#3b5bdb,stroke-width:2px,color:#000
+```
+
+> A rate-limiter misconfiguration (PR #482) drops the threshold from 1000 to 100 req/s on `payment-api`, causing a P1 outage with **42% error rate** and **$2,340/min** revenue impact. Detected via Datadog, diagnosed by on-call (Bob), and resolved with hotfix PR #483 within 20 minutes.
 
 ## Quick Start
 
@@ -14,14 +68,16 @@ An enterprise-grade incident investigation tool powered by [Graphiti](https://gi
 # 1. Start Neo4j
 docker compose up -d
 
-# 2. Install dependencies
+# 2. Create a virtual environment & install dependencies
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
 # 3. Configure environment
 cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
+# Edit .env and add your ANTHROPIC_API_KEY
 
-# 4. Ingest incident data into the graph
+# 4. Ingest incident data into the knowledge graph
 python ingest.py
 
 # 5. Launch the dashboard
@@ -42,24 +98,30 @@ Streamlit Dashboard (app.py)
   Neo4j Knowledge Graph (docker-compose.yml)
 ```
 
-- **incident_data.py** — 13 timestamped incident events (git, CI, deploy, monitoring, alerting, Slack)
-- **ingest.py** — Feeds events into Graphiti as episodes with temporal metadata
-- **app.py** — Streamlit dashboard with timeline, investigation queries, entity search, and auto-generated report
-- **config.py** — Centralized configuration and Graphiti client factory
+| File | Description |
+|---|---|
+| `incident_data.py` | 13 timestamped incident events (git, CI, deploy, monitoring, alerting, Slack) |
+| `ingest.py` | Feeds events into Graphiti as episodes with temporal metadata |
+| `app.py` | Streamlit dashboard with timeline, investigation, entities, and report tabs |
+| `config.py` | Centralized configuration and Graphiti client factory |
+| `local_embedder.py` | Local sentence-transformer embedder for graph search |
+| `docker-compose.yml` | Neo4j 5.26 with APOC plugin |
 
-## Dashboard Tabs
+## Dashboard
 
 | Tab | Description |
 |---|---|
 | **Timeline** | Color-coded event timeline with severity badges |
-| **Investigation** | Run natural language queries against the knowledge graph |
-| **Entities** | Browse people, services, and systems extracted by Graphiti |
+| **Investigation** | Natural language queries against the knowledge graph |
+| **Entities** | People, services, and systems extracted by Graphiti |
 | **Report** | Auto-generated post-incident report with graph enrichment |
 
-## Incident Knowledge Graph
+## Prerequisites
 
-An Excalidraw diagram of the incident is included at [`incident_graph.excalidraw`](./incident_graph.excalidraw). Open it at [excalidraw.com](https://excalidraw.com) to view the full knowledge graph showing entities (people, services, PRs, tools) and their relationships during the incident.
+- Docker & Docker Compose
+- Python 3.11+
+- [Anthropic API key](https://console.anthropic.com/)
 
-## Incident Scenario
+## License
 
-A rate-limiter misconfiguration (PR #482) drops the threshold from 1000 to 100 req/sec on the `payment-api` service, causing a P1 outage with 42% error rate and $2,340/min revenue impact. Detected via Datadog, diagnosed by on-call (Bob), and resolved with hotfix PR #483 within 20 minutes.
+MIT
